@@ -2,8 +2,21 @@
 
 This is a Sample
 
+Run
+```bash
+go-bindata locales/... wizards/...
+```
+first
+
+Then
+```bash
+go run *.java
+```
+
+or
+```bash
+go build
+```
+
 TODO
-1. finish Input Type
-2. add i10n
-3. Use go-bindata
-4. merge to tdp
+1. merge to tdp

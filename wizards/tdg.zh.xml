@@ -1,0 +1,29 @@
+<wizard id="0" name="cmd" lang="zh">
+    <step id="0" name="start">
+        <show-msg>欢迎使用TDP</show-msg>
+        <next-id>10</next-id>
+    </step>
+    <step id="10" name="select lang">
+        <show-msg>请选择你喜欢的语言:</show-msg>
+        <required>true</required>
+        <options>Java</options>
+        <options>Go</options>
+        <options>Rust</options>
+        <default>Go</default>
+        <collect-to>lang</collect-to>
+        <next-id>20</next-id>
+<!--        <next-js>if (option == &#34;Java&#34;) nextId = 20; else nextId = -1;</next-js>-->
+    </step>
+    <step id="20" name="input name">
+        <show-msg>请输入你的名字</show-msg>
+        <required>true</required>
+        <collect-to>name</collect-to>
+<!--        <default>邱张华</default>-->
+        <next-id>1000</next-id>
+    </step>
+    <step id="1000" name="finished">
+        <show-msg>数据收集完成！</show-msg>
+        <next-id>-1</next-id>
+    </step>
+
+</wizard>

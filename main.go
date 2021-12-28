@@ -3,10 +3,13 @@ package main
 import (
 	"encoding/xml"
 	"fmt"
+	"github.com/magiconair/properties"
 	"github.com/qiuzhanghua/go-input"
+	"github.com/qiuzhanghua/i10n"
 	"github.com/robertkrimen/otto"
-	"io/ioutil"
+	"log"
 	"strconv"
+	"strings"
 )
 
 type Step struct {
@@ -31,9 +34,31 @@ type Wizard struct {
 	Step    []Step   `xml:"step"`
 }
 
+func init() {
+	_ = i10n.SetDefaultLang("zh-CN")
+	for _, name := range AssetNames() {
+		if strings.HasPrefix(name, "locales") && strings.HasSuffix(name, ".properties") {
+			buffer, err := Asset(name)
+			if err != nil {
+				log.Fatal(err)
+			}
+			p, err := properties.Load(buffer, properties.UTF8)
+			if err != nil {
+				log.Fatal(err)
+			}
+			tag := i10n.ParseTagWithDefault(name)
+			i10n.AddTagMap(tag, p.Map())
+		}
+	}
+	// 使用i10的方法
+	input.T = i10n.T
+
+}
+
 func main() {
 	w := Wizard{}
-	buffer, err := ioutil.ReadFile("tdg.zh.xml")
+	buffer, err := Asset("wizards/tdg.zh.xml")
+	//buffer, err := ioutil.ReadFile("tdg.zh.xml")
 	checkError(err)
 	err = xml.Unmarshal(buffer, &w)
 	checkError(err)
@@ -55,7 +80,9 @@ func main() {
 			nextId = -1
 		} else {
 			step := w.Step[index]
-			if len(step.Options) > 0 {
+			if len(step.CollectTo) == 0 {
+				fmt.Println(step.ShowMsg)
+			} else if len(step.Options) > 0 {
 				lang, err := ui.Select(step.ShowMsg, step.Options, &input.Options{
 					Default: step.Default,
 					Loop:    true,
@@ -63,14 +90,19 @@ func main() {
 				checkError(err)
 				step.Collected = lang
 			} else {
-				// TODO add input and other
+				name, err := ui.Ask(step.ShowMsg, &input.Options{
+					Default:  step.Default,
+					Required: step.Required,
+					Loop:     true,
+				})
+				checkError(err)
+				step.Collected = name
 			}
 
-			if step.Required {
+			if step.Required && len(step.CollectTo) > 0 {
 				result[step.CollectTo] = step.Collected
 			}
 
-			// 按照当前的xml，选择Java会死循环，选择Golang or Rust会成功
 			if len(step.NextJs) > 6 {
 				vm.Set("id", step.Id)
 				vm.Set("option", step.Collected)
@@ -85,8 +117,7 @@ func main() {
 		}
 	}
 
-	//存储的结果
-	fmt.Println(result)
+	fmt.Println("Data collected:", result)
 }
 
 func showSampleXm() {
