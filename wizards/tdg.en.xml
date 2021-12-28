@@ -1,4 +1,4 @@
-<wizard id="0" name="cmd" lang="zh">
+<wizard id="0" name="cmd" lang="en">
     <step id="0" name="start">
         <show-msg>Welcome to TDP</show-msg>
         <next-id>10</next-id>
