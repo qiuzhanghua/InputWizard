@@ -19,6 +19,7 @@ type Step struct {
 	ShowMsg   string      `xml:"show-msg"` // 显示的已经国际化的内容
 	Default   string      `xml:"default"`
 	Required  bool        `xml:"required"`
+	Masked    bool        `xml:"masked"`     // 如果是密码
 	Options   []string    `xml:"options"`    // 用户可选的选项
 	Collected interface{} `xml:"collected"`  // 获取的输入
 	CollectTo string      `xml:"collect-to"` // 搜集到Map的那个key下
@@ -35,6 +36,7 @@ type Wizard struct {
 }
 
 func init() {
+	//_ = i10n.SetDefaultLang("en-US")
 	_ = i10n.SetDefaultLang("zh-CN")
 	for _, name := range AssetNames() {
 		if strings.HasPrefix(name, "locales") && strings.HasSuffix(name, ".properties") {
@@ -57,7 +59,20 @@ func init() {
 
 func main() {
 	w := Wizard{}
-	buffer, err := Asset("wizards/tdg.zh.xml")
+	prefix := "wizards/tdg."
+	suffix := ".xml"
+	var languages []string
+	for _, lang := range AssetNames() {
+		if strings.HasPrefix(lang, prefix) {
+			index := strings.LastIndex(lang, suffix)
+			if index > 0 {
+				s := lang[len(prefix):index]
+				languages = append(languages, s)
+			}
+		}
+	}
+	lang := i10n.Nearest(i10n.GetDefaultTag().String(), languages)
+	buffer, err := Asset(fmt.Sprintf("%s%s%s", prefix, lang, suffix))
 	//buffer, err := ioutil.ReadFile("tdg.zh.xml")
 	checkError(err)
 	err = xml.Unmarshal(buffer, &w)
@@ -92,6 +107,7 @@ func main() {
 			} else {
 				name, err := ui.Ask(step.ShowMsg, &input.Options{
 					Default:  step.Default,
+					Mask:     step.Masked,
 					Required: step.Required,
 					Loop:     true,
 				})
@@ -117,7 +133,7 @@ func main() {
 		}
 	}
 
-	fmt.Println("Data collected:", result)
+	fmt.Println("result Map:", result)
 }
 
 func showSampleXm() {

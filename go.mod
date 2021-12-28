@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/magiconair/properties v1.8.5
 	github.com/qiuzhanghua/go-input v0.3.1
-	github.com/qiuzhanghua/i10n v0.2.0
+	github.com/qiuzhanghua/i10n v0.2.1
 	github.com/robertkrimen/otto v0.0.0-20211024170158-b87d35c0b86f
 )
 

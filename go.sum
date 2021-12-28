@@ -8,8 +8,8 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/qiuzhanghua/go-input v0.3.1 h1:fP7Dt025gQVqpJ/yXXcKrL4DqN1hr3eqBRQyyN1qV/8=
 github.com/qiuzhanghua/go-input v0.3.1/go.mod h1:qPWemaIGETgBztBcOVq7wvZ5Pj+sIKye2OirdhhaFWc=
-github.com/qiuzhanghua/i10n v0.2.0 h1:aXkdKEW2tStDUoNV5UascMCI2oaT8j7eac8EsMTM9Q8=
-github.com/qiuzhanghua/i10n v0.2.0/go.mod h1:2FEPKEl/HIariQTUdoAE20Tn2P7HUfyext6pRkXI9L0=
+github.com/qiuzhanghua/i10n v0.2.1 h1:vh18OgPw8CoagyEUlbCV1r9cyDDV9S4UGvYw7uNF2dE=
+github.com/qiuzhanghua/i10n v0.2.1/go.mod h1:2FEPKEl/HIariQTUdoAE20Tn2P7HUfyext6pRkXI9L0=
 github.com/robertkrimen/otto v0.0.0-20211024170158-b87d35c0b86f h1:a7clxaGmmqtdNTXyvrp/lVO/Gnkzlhc/+dLs5v965GM=
 github.com/robertkrimen/otto v0.0.0-20211024170158-b87d35c0b86f/go.mod h1:/mK7FZ3mFYEn9zvNPhpngTyatyehSwte5bJZ4ehL5Xw=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
