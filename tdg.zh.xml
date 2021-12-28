@@ -1,0 +1,17 @@
+<wizard id="0" name="cmd" lang="zh">
+    <step id="0" name="welcome">
+        <show-msg>欢迎使用TDP</show-msg>
+        <required>false</required>
+        <next-id>10</next-id>
+    </step>
+    <step id="10" name="first select">
+        <show-msg>请选择你喜欢的语言</show-msg>
+        <required>true</required>
+        <options>Java</options>
+        <options>Go</options>
+        <options>Rust</options>
+        <collect-to>lang</collect-to>
+        <next-id>-1</next-id>
+        <next-js>if (option == &#34;Java&#34;) nextId = 10; else nextId = -1;</next-js>
+    </step>
+</wizard>
