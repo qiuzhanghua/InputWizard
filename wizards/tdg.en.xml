@@ -9,6 +9,7 @@
         <options>Java</options>
         <options>Go</options>
         <options>Rust</options>
+        <option-func>GetDirs</option-func>
         <default>Go</default>
         <collect-to>lang</collect-to>
         <next-id>20</next-id>

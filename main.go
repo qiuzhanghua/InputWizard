@@ -1,7 +1,9 @@
 package main
 
 import (
+	"InputWizard/utils"
 	"encoding/xml"
+	"errors"
 	"fmt"
 	"github.com/magiconair/properties"
 	"github.com/qiuzhanghua/go-input"
@@ -13,18 +15,19 @@ import (
 )
 
 type Step struct {
-	XMLName   xml.Name    `xml:"step"`
-	Id        int         `xml:"id,attr"` // id first start should be 0
-	Name      string      `xml:"name,attr"`
-	ShowMsg   string      `xml:"show-msg"` // 显示的已经国际化的内容
-	Default   string      `xml:"default"`
-	Required  bool        `xml:"required"`
-	Masked    bool        `xml:"masked"`     // 如果是密码
-	Options   []string    `xml:"options"`    // 用户可选的选项
-	Collected interface{} `xml:"collected"`  // 获取的输入
-	CollectTo string      `xml:"collect-to"` // 搜集到Map的那个key下
-	NextId    int         `xml:"next-id"`    // if NextID is -1, Wizard will end.
-	NextJs    string      `xml:"next-js"`    // javascript to cal NextId, prefer
+	XMLName    xml.Name    `xml:"step"`
+	Id         int         `xml:"id,attr"` // id first start should be 0
+	Name       string      `xml:"name,attr"`
+	ShowMsg    string      `xml:"show-msg"` // 显示的已经国际化的内容
+	Default    string      `xml:"default"`
+	Required   bool        `xml:"required"`
+	Masked     bool        `xml:"masked"`  // 如果是密码
+	Options    []string    `xml:"options"` // 用户可选的选项
+	OptionFunc string      `xml:"option-func"`
+	Collected  interface{} `xml:"collected"`  // 获取的输入
+	CollectTo  string      `xml:"collect-to"` // 搜集到Map的那个key下
+	NextId     int         `xml:"next-id"`    // if NextID is -1, Wizard will end.
+	NextJs     string      `xml:"next-js"`    // javascript to cal NextId, prefer
 }
 
 type Wizard struct {
@@ -35,7 +38,14 @@ type Wizard struct {
 	Step    []Step   `xml:"step"`
 }
 
+func GetDirs() []string {
+	return []string{"Go", "Node", "JavaScript"}
+}
+
 func init() {
+	utils.StubStorage["GetDirs"] = GetDirs
+	//ret, err := utils.Call("GetDirs")
+	//fmt.Println(ret, err)
 	//_ = i10n.SetDefaultLang("en-US")
 	_ = i10n.SetDefaultLang("zh-CN")
 	for _, name := range AssetNames() {
@@ -97,7 +107,17 @@ func main() {
 			step := w.Step[index]
 			if len(step.CollectTo) == 0 {
 				fmt.Println(step.ShowMsg)
-			} else if len(step.Options) > 0 {
+			} else if len(step.Options) > 0 || len(step.OptionFunc) > 0 {
+				if len(step.OptionFunc) > 0 {
+					ret, err := utils.Call(step.OptionFunc)
+					checkError(err)
+					step.Options = ret.([]string)
+					if len(step.Options) == 0 {
+						// TODO 按照业务调整
+						err := errors.New("can't find dirs")
+						checkError(err)
+					}
+				}
 				lang, err := ui.Select(step.ShowMsg, step.Options, &input.Options{
 					Default: step.Default,
 					Loop:    true,
